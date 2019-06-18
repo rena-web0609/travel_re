@@ -11,16 +11,16 @@ class CreateSeasonSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('season')->insert([
+        DB::table('seasons')->insert([
             'season'=>'春',
         ]);
-        DB::table('season')->insert([
+        DB::table('seasons')->insert([
             'season'=>'夏',
         ]);
-        DB::table('season')->insert([
+        DB::table('seasons')->insert([
             'season'=>'秋',
         ]);
-        DB::table('season')->insert([
+        DB::table('seasons')->insert([
             'season'=>'冬',
         ]);
     }

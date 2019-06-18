@@ -13,7 +13,7 @@
                     <div class="panel-heading">プランを作成する</div>
                     <div class="panel-body">
 
-                        <form action={{ route('plans.create') }} method="post" enctype="multipart/form-data" >
+                        <form action={{ route('plans.store') }} method="post" enctype="multipart/form-data" >
                             @csrf
                             @if ($errors->any())
                                 <div class="alert alert-danger">
@@ -28,9 +28,9 @@
                                 <label for="title">プラン名</label>
                                 <input type="text" class="form-control" name="title" id="title" >
                                 <label for="season">季節</label>
-                                <input type="text" class="form-control" name="season">
-                                <label for="address">都道府県</label>
-                                <input type="text" class="form-control" name="address">
+                                {{ Form::select('season_id', $seasonId, null, ['class' => 'form-control']) }}
+                                <label for="address">都道府県</label><br>
+                                {{ Form::select('address_id', $addressId, null, ['class' => 'form-control']) }}
                                 <label for="price">金額</label>
                                 <input type="text" class="form-control" name="price">
                                 <label for="access">アクセス</label>

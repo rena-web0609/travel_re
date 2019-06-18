@@ -28,8 +28,8 @@ class PlansSeeder extends Seeder
             DB::table('plans')->insert([
                 'title' => $title,
                 'image' => $image,
-                'season' => $season,
-                'address' => $address,
+                'season_id' => $season,
+                'address_id' => $address,
                 'price' => $price,
                 'access' => $access,
                 'content' => $content,

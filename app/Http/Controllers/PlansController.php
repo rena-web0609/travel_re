@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Auth;
 use Illuminate\Http\Request;
 use App\Plan;
+use App\Season;
+use App\Address;
 
 class PlansController extends Controller
 {
@@ -43,8 +45,16 @@ class PlansController extends Controller
 
     public function create() //get
     {
-        return view('plans/create', [
+        $seasons = Season::select('id', 'season')->get();
+        $seasonId = $seasons->pluck('season', 'id');
+
+        $addresses = Address::select('id', 'address')->get();
+        $addressId = $addresses->pluck('address', 'id');
+
+        return view('plans.create',[
             'plan' => new Plan(),
+            'seasonId' => $seasonId,
+            'addressId' => $addressId,
         ]);
 
 
@@ -62,25 +72,22 @@ class PlansController extends Controller
     {
         $plan = Plan::find($plan);
 
-        $plan->fill($request->all());
+        $seasons = Season::select('id', 'season')->get();
+        $season_id_loop = $seasons->pluck('id', 'season');
 
-        $originalImg = $request->p_image;
-        if($originalImg !== null) {
-            $filePath = $originalImg->store('public');
-            $plan->image = str_replace('public/', '', $filePath);
-        }
+        $addresses = Address::select('id', 'address')->get();
+        $address_id_loop = $addresses->pluck('address', 'id');
 
-        $plan->save();
 
-        return view('plans.edit', [
-            'plan' => $plan,
-        ]);
+        return view('plans.edit',[
+            'season_id_loop' => $season_id_loop,
+            'address_id_loop' => $address_id_loop,
+            'plan' => $plan
+            ]);
     }
 
     public function update(Request $request, int $plan)
     {
-        $plan = Plan::find($plan);
-
         $plan->fill($request->all());
 
         $originalImg = $request->p_image;
@@ -98,8 +105,18 @@ class PlansController extends Controller
     {
         $plan = Plan::find($plan);
 
+        //$seasonId = $plan->season_id;
+        // $season = Season::where('id',$seasonId)->get('season')->first();
+        $season = Season::find($plan->season_id);
+
+        //$addressId = $plan->address_id;
+        //$address = Address::where('id',$addressId)->get('address')->first();
+        $address = Address::find($plan->address_id);
+
         return view('plans.show', [
-           'plan' => $plan,
+            'plan' => $plan,
+            'season' => $season,
+            'address' => $address,
         ]);
     }
 

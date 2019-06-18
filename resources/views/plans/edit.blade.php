@@ -29,10 +29,9 @@
                                 <label for="title">プラン名</label>
                                 <input type="text" class="form-control" name="title" value="{{ old('title', $plan->title) }}" >
                                 <label for="season">季節</label>
-                                <input type="text" class="form-control" name="season" value="{{ old('season',$plan->season) }}" >
-                                <label for="address">都道府県</label>
-                                <input type="text" class="form-control" name="address" value="{{ old('address',$plan->address) }}" >
-                                <label for="price">金額</label>
+                                {{ Form::select('season_id', $seasonId, null, ['class' => 'form-control']) }}
+                                <label for="address">都道府県</label><br>
+                                {{ Form::select('address_id', $addressId, null, ['class' => 'form-control']) }}
                                 <input type="text" class="form-control" name="price" value="{{ old('price',$plan->price) }}" >
                                 <label for="access">アクセス</label>
                                 <input type="text" class="form-control" name="access" value="{{ old('access',$plan->access) }}" >

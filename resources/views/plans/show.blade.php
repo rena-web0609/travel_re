@@ -20,7 +20,8 @@
                                     <h1>{{ $plan->title }}</h1>
                                     <img class="main-img" src={{ $plan->image }}>
                                     <table>
-                                        <tr><th>季節</th><th>{{ $plan->season }}</th></tr>
+                                        <tr><th>季節</th><th>{{ $season->season }}</th></tr>
+                                        <tr><th>都道府県</th><th>{{ $address->address }}</th></tr>
                                         <tr><th>予算</th><th>{{ $plan->price }}</th></tr>
                                         <tr><th>交通手段</th><th>{{ $plan->access }}</th></tr>
                                         <tr><th>詳細</th><th>{{ $plan->content }}</th></tr>
