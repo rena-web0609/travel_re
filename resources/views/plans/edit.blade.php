@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col col-md-offset-3 col-md-6">
                 <nav class="panel panel-default">
-                    <div class="panel-heading">プランを編集する</div>
+                    <div class="panel-heading"><h1>プランを編集</h1></div>
                     <div class="panel-body">
 
                         <form action={{ route('plans.update', ['plan' => $plan->id]) }} method="POST" enctype="multipart/form-data" >
@@ -27,21 +27,22 @@
                             @endif
                             <div class="form-group">
                                 <label for="title">プラン名</label>
-                                <input type="text" class="form-control" name="title" value="{{ old('title', $plan->title) }}" >
+                                <input type="text" class="form-control" name="title" value="{{ old('title',$plan->title) }}" >
                                 <label for="season">季節</label>
-                                {{ Form::select('season_id', $seasonId, null, ['class' => 'form-control']) }}
-                                <label for="address">都道府県</label><br>
-                                {{ Form::select('address_id', $addressId, null, ['class' => 'form-control']) }}
+                                {{ Form::select('season_id', $seasonId, null, ['class' => 'form-control', old('season_id', $plan->season_id)]) }}
+                                <br>
+                                <label for="address">都道府県</label>
+                                {{ Form::select('address_id', $addressId, null, ['class' => 'form-control', old('address_id', $plan->address_id)]) }}
                                 <input type="text" class="form-control" name="price" value="{{ old('price',$plan->price) }}" >
                                 <label for="access">アクセス</label>
                                 <input type="text" class="form-control" name="access" value="{{ old('access',$plan->access) }}" >
                                 <label for="content">詳細</label>
                                 <input type="text" class="form-control" name="content" value="{{ old('content',$plan->content) }}" >
                                 <label for="image">画像</label>
-                                <input type="file" class="form-control" name="p_image" value="{{ url('$filePath') }}" >
+                                <input type="file" class="form-control" name="image">
                             </div>
                             <div class="text-right">
-                                <button type="submit" class="btn btn-primary">編集</button>
+                                <input type="submit" value="編集" class="btn btn-primary">
                             </div>
                         </form>
 

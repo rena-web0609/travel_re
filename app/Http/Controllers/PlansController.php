@@ -2,20 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
 use Illuminate\Http\Request;
 use App\Plan;
 use App\Season;
 use App\Address;
+use Auth;
 
 class PlansController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $plans = Plan::select('title', 'image')->get();
+        $seasons = Season::select('id', 'season')->get();
+        $seasonId = $seasons->pluck('season', 'id');
+
+        $addresses = Address::select('id', 'address')->get();
+        $addressId = $addresses->pluck('address', 'id');
+
+        if(!empty($request->season_id && $request->address_id)) {
+            $plans = Plan::where([
+                'season_id' => $request->season_id,
+                'address_id' => $request->address_id,
+            ])->get();
+        }elseif(!empty($request->season_id)) {
+            $plans = Plan::where(['season_id' => $request->season_id])->get();
+        }elseif(!empty($request->address_id)){
+            $plans = Plan::where(['address_id' => $request->address_id])->get();
+        }else{
+            $plans = Plan::all();
+        }
 
         return view('plans.index', [
             'plans' => $plans,
+            'seasonId' => $seasonId,
+            'addressId' => $addressId,
         ]);
     }
 
@@ -31,9 +50,9 @@ class PlansController extends Controller
         // $plan->content = $request->content;
         $plan->fill($request->all());
 
-        $originalImg = $request->p_image;
-        $filePath = $originalImg->store('public');
-        $plan->image = str_replace('public/', '', $filePath);
+
+        $filename = $request->image->store('public/pic');
+        $plan-> image = basename($filename);
 
         $user = Auth::user();
         $plan->user_id = $user->id;
@@ -45,6 +64,7 @@ class PlansController extends Controller
 
     public function create() //get
     {
+        $plan =new Plan();
         $seasons = Season::select('id', 'season')->get();
         $seasonId = $seasons->pluck('season', 'id');
 
@@ -52,7 +72,7 @@ class PlansController extends Controller
         $addressId = $addresses->pluck('address', 'id');
 
         return view('plans.create',[
-            'plan' => new Plan(),
+            'plan' => $plan,
             'seasonId' => $seasonId,
             'addressId' => $addressId,
         ]);
@@ -64,36 +84,37 @@ class PlansController extends Controller
         //     'price' => $plan->price,
         //     'access' => $plan->access,
         //     'content' => $plan->content,
-        //     'image' => str_replace('public/', 'storage/', $plan->p_image),
+        //     'image' => str_replace('public/', 'storage/', $plan->image),
         // ]);
     }
 
-    public function edit(Request $request, int $plan) //get
+    public function edit(int $plan) //get
     {
         $plan = Plan::find($plan);
 
         $seasons = Season::select('id', 'season')->get();
-        $season_id_loop = $seasons->pluck('id', 'season');
+        $seasonId = $seasons->pluck('season', 'id');
 
         $addresses = Address::select('id', 'address')->get();
-        $address_id_loop = $addresses->pluck('address', 'id');
+        $addressId = $addresses->pluck('address', 'id');
 
 
         return view('plans.edit',[
-            'season_id_loop' => $season_id_loop,
-            'address_id_loop' => $address_id_loop,
+            'seasonId' => $seasonId,
+            'addressId' => $addressId,
             'plan' => $plan
             ]);
     }
 
     public function update(Request $request, int $plan)
     {
+        $plan = Plan::find($plan);
         $plan->fill($request->all());
 
-        $originalImg = $request->p_image;
-        if($originalImg !== null) {
-            $filePath = $originalImg->store('public');
-            $plan->image = str_replace('public/', '', $filePath);
+        $filename = $request->image;
+        if($filename !== null) {
+            $filename = $request->image->store('public/pic');
+            $plan-> image = basename($filename);
         }
 
         $plan->save();
@@ -101,7 +122,7 @@ class PlansController extends Controller
         return redirect()->route('mypage');
     }
 
-    public function show(Request $request, int $plan)
+    public function show(int $plan)
     {
         $plan = Plan::find($plan);
 
@@ -122,6 +143,9 @@ class PlansController extends Controller
 
     public function destroy(Request $request, int $plan)
     {
-        //
+        Plan::find($plan)->delete();
+
+        return redirect()->route('mypage');
     }
+
 }

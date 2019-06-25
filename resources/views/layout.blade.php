@@ -12,12 +12,13 @@
 <header>
     <nav class="my-navbar">
         <a class="my-navbar-brand" href={{ route('plans.index') }}>Travel</a>
+        <div class="my-navbar-create"><a href={{ route('plans.create') }} class="btn-block">プラン作成</a></div>
         <div class="my-navbar-control">
             @if(Auth::check())
                 <a href={{ route('mypage') }} id=“mypage” class=“my-navbar-item”>マイページ</a>
                 ｜
                 <a href="#" id="logout" class="my-navbar-item">ログアウト</a>
-                <form id="logout-form" action={{ route('logout') }} method="POST" style="display: none;">
+                <form id="logout-form" action={{ route('logout') }} method="POST">
                     @csrf
                 </form>
             @else
